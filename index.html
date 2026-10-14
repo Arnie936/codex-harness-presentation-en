@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Codex — A Visual Overview</title>
+  <style>
+    :root {
+      --bg: #08090a;
+      --bg2: #101214;
+      --panel: rgba(255,255,255,0.06);
+      --line: rgba(255,255,255,0.11);
+      --text: #f4f6f5;
+      --muted: #c3c9c7;
+      --soft: #9aa3a1;
+      --accent: #10a37f;
+      --accent-soft: #74aa9c;
+      --accent2: #d8f3ea;
+      --shadow: 0 18px 60px rgba(0,0,0,0.45);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(16,163,127,0.18), transparent 28%),
+        radial-gradient(circle at 90% 8%, rgba(116,170,156,0.14), transparent 22%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      line-height: 1.5;
+    }
+    .container { width: min(1220px, calc(100vw - 42px)); margin: 0 auto; }
+    .hero { padding: 30px 0 20px; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.045));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-main { padding: 30px; position: relative; overflow: hidden; }
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -70px;
+      bottom: -90px;
+      background: radial-gradient(circle, rgba(16,163,127,0.24), transparent 65%);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(16,163,127,0.40);
+      background: rgba(16,163,127,0.12);
+      color: #b8ecdb;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.3rem, 4.5vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0;
+      max-width: 780px;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      padding: 13px 14px;
+      border-radius: 16px;
+      color: #eef2f0;
+      font-size: 15px;
+    }
+    .hero-side { padding: 24px; display: grid; gap: 14px; }
+    .logo-box {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      min-height: 150px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      padding: 18px;
+    }
+    .logo-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
+    .logo-row img.chatgpt { width: 78px; border-radius: 18px; }
+    .codex-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px 12px 14px;
+      border-radius: 20px;
+      background: #0d0f10;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .codex-lockup img { width: 32px; }
+    .codex-lockup span {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .logo-caption { color: var(--soft); font-size: 12.5px; text-align: center; }
+    .quick {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(16,163,127,0.10);
+      border: 1px solid rgba(16,163,127,0.26);
+      color: var(--accent2);
+    }
+    section { padding: 18px 0; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head p { margin: 0; color: var(--muted); max-width: 760px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+    .panel { padding: 22px; }
+    .panel h3 { margin: 0 0 10px; font-size: 1.15rem; }
+    .panel p { margin: 0; color: var(--muted); }
+    ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    ul.clean li {
+      position: relative;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(16,163,127,0.14);
+    }
+    .diagram { padding: 20px; }
+    .diagram svg { width: 100%; height: auto; display: block; }
+    .step-list { display: grid; gap: 12px; }
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+    .num {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: rgba(16,163,127,0.16);
+      border: 1px solid rgba(16,163,127,0.30);
+      font-weight: 800;
+      font-size: 19px;
+    }
+    .step h4 { margin: 0 0 4px; font-size: 1rem; }
+    .step p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    .component {
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .component::after {
+      content: "";
+      position: absolute;
+      right: -26px;
+      bottom: -26px;
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, rgba(16,163,127,0.20), transparent 68%);
+    }
+    .icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(16,163,127,0.14);
+      border: 1px solid rgba(16,163,127,0.24);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .component h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .component p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    .big-quote {
+      padding: 24px;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      color: var(--accent2);
+    }
+    .final-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 7px;
+      padding: 1px 6px;
+    }
+    .table-wrap { overflow-x: auto; padding: 10px; }
+    table { border-collapse: collapse; width: 100%; min-width: 560px; }
+    th, td {
+      text-align: left;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14.5px;
+      color: var(--muted);
+      vertical-align: top;
+    }
+    th { color: var(--text); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; }
+    td:first-child { color: var(--text); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(16,163,127,0.14);
+      border: 1px solid rgba(16,163,127,0.28);
+      color: #b8ecdb;
+    }
+    .tag.warn {
+      background: rgba(217,122,89,0.14);
+      border-color: rgba(217,122,89,0.30);
+      color: #ffd0bd;
+    }
+    .surface {
+      padding: 18px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+    .surface h4 { margin: 0; font-size: 1.05rem; }
+    .surface p { margin: 0; color: var(--muted); font-size: 14px; }
+    .surface .where {
+      color: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    footer.container { padding: 26px 0 46px; color: var(--soft); font-size: 13px; max-width: 900px; }
+    .grid-chart { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 20px; }
+    .panel a { color: var(--accent-soft); }
+    @media (max-width: 980px) {
+      .hero-grid, .grid-2, .grid-3, .grid-chart, .final-grid { grid-template-columns: 1fr; }
+      .hero-points { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero container">
+    <div class="hero-grid">
+      <div class="card hero-main">
+        <div class="eyebrow">Codex • OpenAI's AI coding agent • Harness</div>
+        <h1>Codex is a model inside a <span style="color: var(--accent);">harness</span>.</h1>
+        <p class="lead">
+          The model generates text. The harness gives it tools, context, a sandbox with approval rules, and a loop, and that is what turns text into real work in a codebase.
+        </p>
+        <div class="hero-points">
+          <div class="pill"><strong>Model:</strong> thinks, plans, and decides which tools to call.</div>
+          <div class="pill"><strong>Harness:</strong> runs the actions and feeds the results back into the context.</div>
+          <div class="pill"><strong>Context:</strong> chat history, search results, file contents, and <code>AGENTS.md</code>.</div>
+          <div class="pill"><strong>Result:</strong> an AI that reads, changes, runs, and explains code.</div>
+        </div>
+      </div>
+      <div class="card hero-side">
+        <div class="logo-box">
+          <div class="logo-row">
+            <img class="chatgpt" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjQwNiAyNDA2Ij4KCTxwYXRoIGQ9Ik0xIDU3OC40QzEgMjU5LjUgMjU5LjUgMSA1NzguNCAxaDEyNDkuMWMzMTkgMCA1NzcuNSAyNTguNSA1NzcuNSA1NzcuNFYyNDA2SDU3OC40QzI1OS41IDI0MDYgMSAyMTQ3LjUgMSAxODI4LjZWNTc4LjR6IiBmaWxsPSIjNzRhYTljIi8+Cgk8cGF0aCBpZD0iYSIgZD0iTTExMDcuMyAyOTkuMWMtMTk3Ljk5OSAwLTM3My45IDEyNy4zLTQzNS4yIDMxNS4zTDY1MCA3NDMuNXY0MjcuOWMwIDIxLjQgMTEgNDAuNCAyOS40IDUxLjRsMzQ0LjUgMTk4LjUxNVY4MzMuM2guMXYtMjcuOUwxMzcyLjcgNjA0YzMzLjcxNS0xOS41MiA3MC40NC0zMi44NTcgMTA4LjQ3LTM5LjgyOEwxNDQ3LjYgNDUwLjNDMTM2MSAzNTMuNSAxMjM3LjEgMjk4LjUgMTEwNy4zIDI5OS4xem0wIDExNy41LS42LjZjNzkuNjk5IDAgMTU2LjMgMjcuNSAyMTcuNiA3OC40LTIuNSAxLjItNy40IDQuMy0xMSA2LjFMOTUyLjggNzA5LjNjLTE4LjQgMTAuNC0yOS40IDMwLTI5LjQgNTEuNFYxMjQ4bC0xNTUuMS04OS40Vjc1NS44Yy0uMS0xODcuMDk5IDE1MS42MDEtMzM4LjkgMzM5LTMzOS4yeiIgZmlsbD0iI2ZmZiIvPgoJPHVzZSB4bGluazpocmVmPSIjYSIgdHJhbnNmb3JtPSJyb3RhdGUoNjAgMTIwMyAxMjAzKSIvPgogIAk8dXNlIHhsaW5rOmhyZWY9IiNhIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjAgMTIwMyAxMjAzKSIvPgoJPHVzZSB4bGluazpocmVmPSIjYSIgdHJhbnNmb3JtPSJyb3RhdGUoMTgwIDEyMDMgMTIwMykiLz4KCTx1c2UgeGxpbms6aHJlZj0iI2EiIHRyYW5zZm9ybT0icm90YXRlKDI0MCAxMjAzIDEyMDMpIi8+Cgk8dXNlIHhsaW5rOmhyZWY9IiNhIiB0cmFuc2Zvcm09InJvdGF0ZSgzMDAgMTIwMyAxMjAzKSIvPgoKPC9zdmc+" alt="ChatGPT logo" />
+            <div class="codex-lockup">
+              <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMzIwIDMyMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz4KPHBhdGggZmlsbD0nI2ZmZmZmZicgZD0nbTI5Ny4wNiAxMzAuOTdjNy4yNi0yMS43OSA0Ljc2LTQ1LjY2LTYuODUtNjUuNDgtMTcuNDYtMzAuNC01Mi41Ni00Ni4wNC04Ni44NC0zOC42OC0xNS4yNS0xNy4xOC0zNy4xNi0yNi45NS02MC4xMy0yNi44MS0zNS4wNC0uMDgtNjYuMTMgMjIuNDgtNzYuOTEgNTUuODItMjIuNTEgNC42MS00MS45NCAxOC43LTUzLjMxIDM4LjY3LTE3LjU5IDMwLjMyLTEzLjU4IDY4LjU0IDkuOTIgOTQuNTQtNy4yNiAyMS43OS00Ljc2IDQ1LjY2IDYuODUgNjUuNDggMTcuNDYgMzAuNCA1Mi41NiA0Ni4wNCA4Ni44NCAzOC42OCAxNS4yNCAxNy4xOCAzNy4xNiAyNi45NSA2MC4xMyAyNi44IDM1LjA2LjA5IDY2LjE2LTIyLjQ5IDc2Ljk0LTU1Ljg2IDIyLjUxLTQuNjEgNDEuOTQtMTguNyA1My4zMS0zOC42NyAxNy41Ny0zMC4zMiAxMy41NS02OC41MS05Ljk0LTk0LjUxem0tMTIwLjI4IDE2OC4xMWMtMTQuMDMuMDItMjcuNjItNC44OS0zOC4zOS0xMy44OC40OS0uMjYgMS4zNC0uNzMgMS44OS0xLjA3bDYzLjcyLTM2LjhjMy4yNi0xLjg1IDUuMjYtNS4zMiA1LjI0LTkuMDd2LTg5LjgzbDI2LjkzIDE1LjU1Yy4yOS4xNC40OC40Mi41Mi43NHY3NC4zOWMtLjA0IDMzLjA4LTI2LjgzIDU5LjktNTkuOTEgNTkuOTd6bS0xMjguODQtNTUuMDNjLTcuMDMtMTIuMTQtOS41Ni0yNi4zNy03LjE1LTQwLjE4LjQ3LjI4IDEuMy43OSAxLjg5IDEuMTNsNjMuNzIgMzYuOGMzLjIzIDEuODkgNy4yMyAxLjg5IDEwLjQ3IDBsNzcuNzktNDQuOTJ2MzEuMWMuMDIuMzItLjEzLjYzLS4zOC44M2wtNjQuNDEgMzcuMTljLTI4LjY5IDE2LjUyLTY1LjMzIDYuNy04MS45Mi0yMS45NXptLTE2Ljc3LTEzOS4wOWM3LTEyLjE2IDE4LjA1LTIxLjQ2IDMxLjIxLTI2LjI5IDAgLjU1LS4wMyAxLjUyLS4wMyAyLjJ2NzMuNjFjLS4wMiAzLjc0IDEuOTggNy4yMSA1LjIzIDkuMDZsNzcuNzkgNDQuOTEtMjYuOTMgMTUuNTVjLS4yNy4xOC0uNjEuMjEtLjkxLjA4bC02NC40Mi0zNy4yMmMtMjguNjMtMTYuNTgtMzguNDUtNTMuMjEtMjEuOTUtODEuODl6bTIyMS4yNiA1MS40OS03Ny43OS00NC45MiAyNi45My0xNS41NGMuMjctLjE4LjYxLS4yMS45MS0uMDhsNjQuNDIgMzcuMTljMjguNjggMTYuNTcgMzguNTEgNTMuMjYgMjEuOTQgODEuOTQtNy4wMSAxMi4xNC0xOC4wNSAyMS40NC0zMS4yIDI2LjI4di03NS44MWMuMDMtMy43NC0xLjk2LTcuMi01LjItOS4wNnptMjYuOC00MC4zNGMtLjQ3LS4yOS0xLjMtLjc5LTEuODktMS4xM2wtNjMuNzItMzYuOGMtMy4yMy0xLjg5LTcuMjMtMS44OS0xMC40NyAwbC03Ny43OSA0NC45MnYtMzEuMWMtLjAyLS4zMi4xMy0uNjMuMzgtLjgzbDY0LjQxLTM3LjE2YzI4LjY5LTE2LjU1IDY1LjM3LTYuNyA4MS45MSAyMiA2Ljk5IDEyLjEyIDkuNTIgMjYuMzEgNy4xNSA0MC4xem0tMTY4LjUxIDU1LjQzLTI2Ljk0LTE1LjU1Yy0uMjktLjE0LS40OC0uNDItLjUyLS43NHYtNzQuMzljLjAyLTMzLjEyIDI2Ljg5LTU5Ljk2IDYwLjAxLTU5Ljk0IDE0LjAxIDAgMjcuNTcgNC45MiAzOC4zNCAxMy44OC0uNDkuMjYtMS4zMy43My0xLjg5IDEuMDdsLTYzLjcyIDM2LjhjLTMuMjYgMS44NS01LjI2IDUuMzEtNS4yNCA5LjA2bC0uMDQgODkuNzl6bTE0LjYzLTMxLjU0IDM0LjY1LTIwLjAxIDM0LjY1IDIwdjQwLjAxbC0zNC42NSAyMC0zNC42NS0yMHonLz4KPC9zdmc+" alt="OpenAI logomark" />
+              <span>codex</span>
+            </div>
+          </div>
+          <div class="logo-caption">Codex is the coding agent in the ChatGPT and OpenAI ecosystem.</div>
+        </div>
+        <div class="quick"><strong>Simple definition:</strong><br/>A harness is the operating environment around the model that turns text generation into real actions.</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>What this means</h2>
+      <p>The useful mental model is not "the AI magically changes code." It is "the model asks, the harness acts."</p>
+    </div>
+    <div class="grid-3">
+      <div class="card panel">
+        <h3>Without a harness</h3>
+        <ul class="clean">
+          <li>Text generation only</li>
+          <li>No real file access</li>
+          <li>No command execution</li>
+        </ul>
+      </div>
+      <div class="card panel">
+        <h3>With a harness</h3>
+        <ul class="clean">
+          <li>Read, search, edit, shell, Git</li>
+          <li>Sandbox and approval levels as a safety net</li>
+          <li>Session memory and flow control</li>
+        </ul>
+      </div>
+      <div class="card panel">
+        <h3>Why it matters</h3>
+        <ul class="clean">
+          <li>The same model produces very different results in different harnesses</li>
+          <li>Tool design and context quality decide the outcome</li>
+          <li>Good systems beat vague AI magic</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Why a good harness matters so much</h2>
+      <p>Same model, same benchmark, different harness. OpenAI tripled the ARC-AGI-3 score of GPT-5.6 Sol by changing two settings.</p>
+    </div>
+    <div class="grid-chart">
+      <div class="card diagram">
+        <svg viewBox="0 0 860 460" role="img" aria-label="Line chart: GPT-5.6 Sol on the public ARC-AGI-3 dataset. The harness with preserved reasoning and compaction reaches about 38 percent at roughly 0.5 million tokens; the official harness reaches only about 13 percent at 2.9 million tokens.">
+          <text x="20" y="26" fill="#fff" font-size="21" font-weight="800">GPT-5.6 Sol on the public ARC-AGI-3 dataset</text>
+
+          <g stroke="rgba(255,255,255,0.10)" stroke-width="1">
+            <line x1="96" y1="360" x2="700" y2="360"/>
+            <line x1="96" y1="282.5" x2="700" y2="282.5"/>
+            <line x1="96" y1="205" x2="700" y2="205"/>
+            <line x1="96" y1="127.5" x2="700" y2="127.5"/>
+            <line x1="96" y1="50" x2="700" y2="50"/>
+          </g>
+          <line x1="96" y1="50" x2="96" y2="360" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+
+          <g fill="#9aa3a1" font-size="14" text-anchor="end">
+            <text x="84" y="365">0%</text>
+            <text x="84" y="287.5">10%</text>
+            <text x="84" y="210">20%</text>
+            <text x="84" y="132.5">30%</text>
+            <text x="84" y="55">40%</text>
+          </g>
+          <g fill="#9aa3a1" font-size="14" text-anchor="middle">
+            <text x="182" y="384">0.5M</text>
+            <text x="269" y="384">1M</text>
+            <text x="355" y="384">1.5M</text>
+            <text x="441" y="384">2M</text>
+            <text x="527" y="384">2.5M</text>
+            <text x="614" y="384">3M</text>
+            <text x="700" y="384">3.5M</text>
+          </g>
+          <text x="26" y="205" fill="#c3c9c7" font-size="14" text-anchor="middle" transform="rotate(-90 26 205)">Score</text>
+          <text x="398" y="410" fill="#c3c9c7" font-size="14" text-anchor="middle">Tokens used</text>
+
+          <polyline points="104.6,352.3 121.9,347.6 220.3,318.2 316.9,303.4 596.5,257.7"
+                    fill="none" stroke="#74aa9c" stroke-width="3" stroke-dasharray="9 7"/>
+          <g fill="#74aa9c">
+            <circle cx="104.6" cy="352.3" r="6"/><circle cx="121.9" cy="347.6" r="6"/>
+            <circle cx="220.3" cy="318.2" r="6"/><circle cx="316.9" cy="303.4" r="6"/>
+            <circle cx="596.5" cy="257.7" r="6"/>
+          </g>
+          <text x="614" y="262" fill="#cfe9e0" font-size="15" font-weight="600">Official harness</text>
+
+          <polyline points="113.3,330.5 125.3,301.9 137.4,255.4 165,158.5 178.8,61.6"
+                    fill="none" stroke="#7aa5f0" stroke-width="3"/>
+          <g fill="#7aa5f0">
+            <circle cx="113.3" cy="330.5" r="6"/><circle cx="125.3" cy="301.9" r="6"/>
+            <circle cx="137.4" cy="255.4" r="6"/><circle cx="165" cy="158.5" r="6"/>
+            <circle cx="178.8" cy="61.6" r="6"/>
+          </g>
+          <text x="194" y="58" fill="#cfdcf7" font-size="15" font-weight="600">Harness with preserved reasoning</text>
+          <text x="194" y="78" fill="#cfdcf7" font-size="15" font-weight="600">and compaction</text>
+        </svg>
+      </div>
+      <div class="card panel">
+        <h3>What the curve shows</h3>
+        <ul class="clean">
+          <li>Two harness settings: <strong>keep reasoning across turns</strong> and <strong>compaction</strong> instead of a hard context cutoff.</li>
+          <li>Result: about <strong>38%</strong> instead of about <strong>13%</strong>, using roughly one sixth of the tokens.</li>
+          <li>The model is the same in both runs. The difference comes entirely from the environment around it.</li>
+          <li>That is why it pays to understand and configure the harness.</li>
+        </ul>
+        <p style="margin-top:14px; font-size:13px;">Source: <a href="https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/" target="_blank" rel="noopener">OpenAI — "How two settings tripled our ARC-AGI-3 scores"</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Harness architecture</h2>
+      <p>The harness sits between the language model and the real environment.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card diagram">
+        <svg viewBox="0 0 760 440" role="img" aria-label="Diagram of the Codex harness architecture">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0%" stop-color="#10a37f" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#74aa9c" stop-opacity="0.95"/>
+            </linearGradient>
+          </defs>
+          <rect x="12" y="12" width="736" height="416" rx="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+          <text x="380" y="48" fill="#fff" font-size="28" font-weight="800" text-anchor="middle">Harness architecture</text>
+
+          <rect x="292" y="84" width="176" height="84" rx="22" fill="url(#g)"/>
+          <text x="380" y="118" fill="#fff" font-size="26" font-weight="800" text-anchor="middle">LLM</text>
+          <text x="380" y="145" fill="#eafff8" font-size="15" text-anchor="middle">plans • thinks • calls tools</text>
+
+          <rect x="72" y="222" width="176" height="82" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+          <text x="160" y="256" fill="#fff" font-size="22" font-weight="700" text-anchor="middle">Tools</text>
+          <text x="160" y="280" fill="#cfd6d4" font-size="14" text-anchor="middle">read • search • shell • MCP</text>
+
+          <rect x="292" y="222" width="176" height="82" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+          <text x="380" y="256" fill="#fff" font-size="22" font-weight="700" text-anchor="middle">Sandbox</text>
+          <text x="380" y="280" fill="#cfd6d4" font-size="14" text-anchor="middle">approval: ask • never</text>
+
+          <rect x="512" y="222" width="176" height="82" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+          <text x="600" y="256" fill="#fff" font-size="22" font-weight="700" text-anchor="middle">Context</text>
+          <text x="600" y="280" fill="#cfd6d4" font-size="14" text-anchor="middle">history • output • AGENTS.md</text>
+
+          <rect x="210" y="338" width="340" height="60" rx="16" fill="rgba(16,163,127,0.12)" stroke="rgba(16,163,127,0.30)"/>
+          <text x="380" y="363" fill="#fff" font-size="22" font-weight="700" text-anchor="middle">Orchestration loop</text>
+          <text x="380" y="385" fill="#b8ecdb" font-size="14" text-anchor="middle">run → append result → continue</text>
+
+          <path d="M 380 168 L 160 222" stroke="#74aa9c" stroke-width="3" fill="none"/>
+          <path d="M 380 168 L 380 222" stroke="#74aa9c" stroke-width="3" fill="none"/>
+          <path d="M 380 168 L 600 222" stroke="#74aa9c" stroke-width="3" fill="none"/>
+          <path d="M 160 304 Q 160 358 210 368" stroke="#74aa9c" stroke-width="3" fill="none"/>
+          <path d="M 380 304 L 380 338" stroke="#74aa9c" stroke-width="3"/>
+          <path d="M 600 304 Q 600 358 550 368" stroke="#74aa9c" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
+      <div class="card panel">
+        <h3>Core idea</h3>
+        <ul class="clean">
+          <li>The model only knows what is in its context.</li>
+          <li>The harness decides which tools exist and how they are described.</li>
+          <li>After a tool call, the harness performs the real action inside the sandbox.</li>
+          <li>The result goes back into the context so the model can keep working.</li>
+          <li>This loop is what makes Codex feel agentic.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>The action loop</h2>
+      <p>Every useful coding agent follows roughly this pattern.</p>
+    </div>
+    <div class="grid-2">
+      <div class="step-list">
+        <div class="step"><div class="num">1</div><div><h4>User gives a task</h4><p>Example: find a bug, fix it, and explain the change.</p></div></div>
+        <div class="step"><div class="num">2</div><div><h4>Model picks a tool</h4><p>It searches, reads files, checks tests, or runs a command.</p></div></div>
+        <div class="step"><div class="num">3</div><div><h4>Harness executes</h4><p>The action happens in the real environment, filtered through the sandbox and approval rules.</p></div></div>
+        <div class="step"><div class="num">4</div><div><h4>Output lands in the context</h4><p>The model "sees" the result and decides the next step.</p></div></div>
+        <div class="step"><div class="num">5</div><div><h4>Loop until done</h4><p>Read, change, run, verify, explain.</p></div></div>
+      </div>
+      <div class="card big-quote">
+        <strong>Codex in one sentence:</strong><br/><br/>
+        A language model becomes a practical coding agent once a harness gives it tools, context, sandbox boundaries, memory, and a loop for finishing tasks.
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Core components</h2>
+      <p>The building blocks of the Codex harness.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card component"><div class="icon">T</div><h3>Tool system</h3><p>Read, search, and edit files, run shell commands, use Git, plus external tools through MCP servers.</p></div>
+      <div class="card component"><div class="icon">C</div><h3>Context engine</h3><p>Loads what is needed instead of dumping the whole repo into the context. Long sessions get condensed (compaction).</p></div>
+      <div class="card component"><div class="icon">S</div><h3>Sandbox &amp; approvals</h3><p>Two separate controls: the sandbox limits what a command may do, the approval policy decides when Codex asks first.</p></div>
+      <div class="card component"><div class="icon">H</div><h3>Sessions</h3><p>History and task state persist. You can resume a session instead of starting cold.</p></div>
+      <div class="card component"><div class="icon">O</div><h3>Orchestration</h3><p>Drives the cycle from prompt to tool call to result to the next action.</p></div>
+      <div class="card component"><div class="icon">M</div><h3>Project memory</h3><p><code>AGENTS.md</code> preloads rules, structure, and expectations. Files closer to the working directory take precedence.</p></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Sandbox and approvals</h2>
+      <p>The part of the harness that makes Codex safe enough to actually let it work. Sandbox mode and approval policy are set independently.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card table-wrap">
+        <table>
+          <thead>
+            <tr><th>Sandbox mode</th><th>What is allowed</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>read-only</code></td><td>Read only. Edits, commands, and network access need approval.</td></tr>
+            <tr><td><code>workspace-write</code><br/><span class="tag">Default</span></td><td>Read, edit, and run commands in the working directory. Network access is off by default.</td></tr>
+            <tr><td><code>danger-full-access</code><br/><span class="tag warn">Risky</span></td><td>No sandbox limits. Only sensible in environments that are already isolated, such as containers or CI.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card table-wrap">
+        <table>
+          <thead>
+            <tr><th>Approval policy</th><th>When Codex asks</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>untrusted</code></td><td>Only known-safe read operations run automatically; everything else needs confirmation.</td></tr>
+            <tr><td><code>on-request</code></td><td>Codex asks when it wants to leave the sandbox, for example for network access or writing outside the workspace.</td></tr>
+            <tr><td><code>never</code></td><td>No prompts. Codex works autonomously within the sandbox limits.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top: 16px;">
+      <div class="card panel"><h3>macOS</h3><p>Seatbelt profiles via <code>sandbox-exec</code>, matched to the selected sandbox mode.</p></div>
+      <div class="card panel"><h3>Linux</h3><p>Isolation via <code>bwrap</code> (Bubblewrap) plus <code>seccomp</code> filters.</p></div>
+      <div class="card panel"><h3>Windows</h3><p>Through WSL2, where the same Linux sandbox rules apply.</p></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>One agent, many surfaces</h2>
+      <p>The harness principle stays the same. What changes is the environment the loop runs in.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card surface"><div class="where">Terminal</div><h4>Codex CLI</h4><p>The interactive agent in your shell: local on your machine, with your files and your sandbox.</p></div>
+      <div class="card surface"><div class="where">Editor</div><h4>IDE extension</h4><p>The same agent in your editor, with context from your open files and changes shown as diffs to review.</p></div>
+      <div class="card surface"><div class="where">Cloud</div><h4>Codex on the web</h4><p>Tasks run in a hosted sandbox with a copy of the repo: in parallel, without tying up your own machine.</p></div>
+      <div class="card surface"><div class="where">GitHub</div><h4>Code review</h4><p>Codex reviews pull requests and comments on changes directly in the repository.</p></div>
+      <div class="card surface"><div class="where">Desktop</div><h4>ChatGPT app</h4><p>Codex as part of the ChatGPT app, for projects, chats, and local tasks.</p></div>
+      <div class="card surface"><div class="where">Automation</div><h4><code>codex exec</code></h4><p>Non-interactive runs for scripts and CI: task in, result out, no prompts.</p></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>How the harness scales</h2>
+      <p>When a task gets too big for one context window, the harness splits the work instead of overloading the model.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card panel">
+        <h3>More work in parallel</h3>
+        <ul class="clean">
+          <li><strong>Subagents:</strong> a manager breaks the task down and hands subtasks to workers, each with its own context window.</li>
+          <li><strong>Git worktrees:</strong> locally, every parallel task gets its own working copy of the same repo so the changes don't collide.</li>
+          <li><strong>Compaction:</strong> long sessions get condensed instead of stopping at the context limit.</li>
+        </ul>
+      </div>
+      <div class="card panel">
+        <h3>Plug in more capabilities</h3>
+        <ul class="clean">
+          <li><strong>MCP:</strong> external tools and data sources are added as extra tools.</li>
+          <li><strong>Skills &amp; plugins:</strong> reusable instructions and extensions the harness loads when needed.</li>
+          <li><strong>Configuration:</strong> <code>config.toml</code> for model, sandbox, approvals, and MCP servers; <code>AGENTS.md</code> for project rules.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>The model inside the harness</h2>
+      <p>Model and harness are separate parts: you can swap the model without changing anything else. As of August 2026.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card component"><div class="icon">S</div><h3>GPT-5.6 Sol</h3><p>The flagship for complex coding tasks, computer use, research, and security.</p></div>
+      <div class="card component"><div class="icon">T</div><h3>GPT-5.6 Terra</h3><p>The balanced choice: close to top performance at a much lower price.</p></div>
+      <div class="card component"><div class="icon">L</div><h3>GPT-5.6 Luna</h3><p>The economical option for simpler tasks and many runs.</p></div>
+    </div>
+    <div class="card panel" style="margin-top:16px">
+      <h3>Reasoning effort as a dial</h3>
+      <p>
+        Besides the model, you can set how much the model thinks, from low to maximum. More reasoning effort helps with hard tasks but costs time and tokens. That's the point: model choice and reasoning depth are harness parameters, not fixed properties of the AI.
+      </p>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Codex vs. Claude Code</h2>
+      <p>Both are model + harness. The building blocks just have different names.</p>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr><th>Building block</th><th>Codex (OpenAI)</th><th>Claude Code (Anthropic)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Project memory</td><td><code>AGENTS.md</code></td><td><code>CLAUDE.md</code></td></tr>
+          <tr><td>Safety layer</td><td>Sandbox mode and approval policy as separate controls</td><td>Permission layer with per-tool rules: allow, ask, deny</td></tr>
+          <tr><td>External tools</td><td>MCP servers</td><td>MCP servers</td></tr>
+          <tr><td>Extensions</td><td>Skills, plugins, <code>config.toml</code></td><td>Skills, plugins, hooks, slash commands</td></tr>
+          <tr><td>Parallelism</td><td>Subagents, Git worktrees</td><td>Subagents, Git worktrees</td></tr>
+          <tr><td>Automation</td><td><code>codex exec</code> for scripts and CI</td><td>Headless mode for scripts and CI</td></tr>
+          <tr><td>Surfaces</td><td>CLI, IDE, web cloud, GitHub review, ChatGPT app</td><td>CLI, IDE, web app, desktop app</td></tr>
+          <tr><td>Models</td><td>GPT-5.6 family</td><td>Claude family</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-head">
+      <h2>Key takeaways</h2>
+      <p>What should stick.</p>
+    </div>
+    <div class="final-grid">
+      <div class="card panel"><h3>1. Not just a model</h3><p>Codex is model + harness.</p></div>
+      <div class="card panel"><h3>2. Context is everything</h3><p>The model only knows what the harness gives it.</p></div>
+      <div class="card panel"><h3>3. Limits enable autonomy</h3><p>Sandbox and approvals are what make it reasonable to let the agent run.</p></div>
+      <div class="card panel"><h3>4. It's system design</h3><p>The magic is in the architecture, not in wizardry.</p></div>
+    </div>
+  </section>
+
+  <footer class="container">
+    Based on OpenAI's official Codex documentation (sandbox and approval modes, <code>AGENTS.md</code>, model overview, CLI reference). As of August 2026; model names and features change quickly.<br/><br/>
+    ChatGPT and OpenAI are trademarks of OpenAI. The logos are used for illustration only; the "codex" wordmark is recreated as plain type.
+  </footer>
+</body>
+</html>
